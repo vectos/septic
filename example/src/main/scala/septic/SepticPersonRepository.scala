@@ -8,16 +8,19 @@ final case class Universe(
 )
 
 object Universe {
-  def zero = Universe(Nil)
+  def zero: Universe = Universe(Nil)
 }
 
 object SepticPersonRepository extends PersonRepository[Septic[Universe, *]] {
-  override def insertMany(persons: List[Person]): Septic[Universe, Long] =
+  def insertMany(persons: List[Person]): Septic[Universe, Long] =
     Septic.insertMany(Universe.persons)(persons)
 
-  override def deleteWhenOlderThen(age: Long): Septic[Universe, Long] =
+  def deleteWhenOlderThen(age: Long): Septic[Universe, Long] =
     Septic.delete(Universe.persons)(_.age > age)
 
-  override def listAll(): Septic[Universe, List[Person]] =
+  def listAll(): Septic[Universe, List[Person]] =
     Septic.all(Universe.persons)
+
+  def create: Septic[Universe, Unit] =
+    Septic.unit
 }

@@ -1,5 +1,6 @@
 package septic
 
+import cats.Monad
 import cats.data.State
 import cats.implicits._
 import monocle.Lens
@@ -13,10 +14,10 @@ object Septic {
   def all[D, A](at: Lens[D, List[A]]): Septic[D, List[A]] =
     Septic(State.get.map(at.get))
 
-  def unit: Septic[Any, Unit] =
+  def unit[D]: Septic[D, Unit] =
     Septic(State.pure(()))
 
-  def succeed[A](value: A): Septic[Any, A] =
+  def succeed[D, A](value: A): Septic[D, A] =
     Septic(State.pure(value))
 
   def insertMany[D, A](at: Lens[D, List[A]])(elements: List[A]): Septic[D, Long] =
@@ -78,5 +79,18 @@ object Septic {
         _ <- State.modify[D](s => at.modify(_ => updated ++ notToUpdate ++ toInsert)(s))
       } yield toInsert ++ updated
     }
-  
+
+  implicit def monad[D]: Monad[Septic[D, *]] = new Monad[Septic[D, *]] {
+    def pure[A](x: A): Septic[D, A] = succeed(x)
+
+    def flatMap[A, B](fa: Septic[D, A])(f: A => Septic[D, B]): Septic[D, B] =
+      Septic(fa.db.flatMap(a => f(a).db))
+
+    def tailRecM[A, B](a: A)(f: A => Septic[D, Either[A, B]]): Septic[D, B] =
+      flatMap(f(a)) {
+        case Left(a) => tailRecM(a)(f)
+        case Right(b) => succeed(b)
+      }
+  }
+
 }

@@ -7,7 +7,7 @@ import monocle.Lens
 trait SepticSyntax {
 
   implicit class RichSeptic[F[_], D, A](val septic: Septic[D, F[A]]) {
-    def headOption(implicit F: Foldable[F]): Septic[D, F[A]] =
+    def headOption(implicit F: Foldable[F]): Septic[D, Option[A]] =
       Septic(septic.db.map(_.get(0)))
 
     def filter(f: A => Boolean)(implicit F: FunctorFilter[F]): Septic[D, F[A]] =

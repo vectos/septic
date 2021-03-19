@@ -41,7 +41,11 @@ val example =
         "org.tpolecat"      %% "doobie-core"            % doobieVersion,
         "org.tpolecat"      %% "doobie-postgres"        % doobieVersion,
         "org.tpolecat"      %% "doobie-hikari"          % doobieVersion,
-        "com.github.julien-truffaut" %% "monocle-macro" % "3.0.0-M3"
+        "com.github.julien-truffaut" %% "monocle-macro" % "3.0.0-M3",
+        "com.softwaremill.diffx" %% "diffx-specs2" % "0.4.4" % Test,
+        "org.specs2" %% "specs2-scalacheck" % "4.10.6" % Test,
+        "com.codecommit" %% "cats-effect-testing-specs2" % "0.5.2" % Test
+
       )
     )
     .dependsOn(core)
