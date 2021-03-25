@@ -26,13 +26,13 @@ class PersonRepoSpec extends Specification with DoobieSpec {
       }
     }
 
-    "should delete people older then 30" in {
-      prop { persons: List[Person] =>
+    "should delete people older then" in {
+      prop { (persons: List[Person], age: Int) =>
         assertMirroring {
           harnass.model.eval { x =>
             x.create *>
               x.insertMany(persons) *>
-              x.deleteWhenOlderThen(30) *>
+              x.deleteWhenOlderThen(age) *>
               x.listAll()
           }
         }
