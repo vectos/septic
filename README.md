@@ -1,7 +1,5 @@
 # septic
 
-> Can your axioms survice the septic tank?
-
 Septic is a model based property based testing library for tagless final algebras.
 
 ## Rationale
@@ -17,7 +15,6 @@ Typical properties tested with repositories and API clients are:
 - *Data loss* - Does insert & update / read yield symmetric results?
 - *Locality* - Do update / delete / read specific things?
 - *Idempotent* - Are insert / update / delete methods idempotent?
-- *Behavior* - After a insert or update, does read method yield the right results?
 
 Testing these properties can assert that the interactions with datastores and API's is correct.
 
